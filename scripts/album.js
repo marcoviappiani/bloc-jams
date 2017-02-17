@@ -1,4 +1,7 @@
- // Example Album
+// List of Albums
+var albums = [];
+
+// Example Album
  var albumPicasso = {
      title: 'The Colors',
      artist: 'Pablo Picasso',
@@ -13,6 +16,7 @@
          { title: 'Magenta', duration: '2:15'}
      ]
  };
+albums.push(albumPicasso); //push albumPicasso into the "albums" list
  
  // Another Example Album
  var albumMarconi = {
@@ -29,6 +33,24 @@
          { title: 'Wrong phone number', duration: '2:15'}
      ]
  };
+albums.push(albumMarconi); //push albumMarconi into the "albums" list
+
+ // Third Example Album
+ var albumQueen = {
+     title: 'A Night at The Oper',
+     artist: 'Marconi',
+     label: 'EMI',
+     year: '1975',
+     albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4d/Queen_A_Night_At_The_Opera.png',
+     songs: [
+         { title: 'Love of My Life', duration: '3:38' },
+         { title: 'The Prophet\'s song', duration: '8:21' },
+         { title: 'Bohemian Rapsody', duration: '5:57'},
+         { title: 'You\'re my Best Friend', duration: '2:50' },
+         { title: '39', duration: '3:30'}
+     ]
+ };
+albums.push(albumQueen); //push albumQueen into the "albums" list
 
  var createSongRow = function(songNumber, songName, songLength) {
      var template =
@@ -65,6 +87,16 @@
      }
  };
  
+var currentAlbum = 0; //make sure current Album is initially set to zero
+
+var changeAlbum = function(album) {
+    currentAlbum++;
+    if(currentAlbum >= albums.length) currentAlbum = 0;
+    setCurrentAlbum(albums[currentAlbum]);
+}
+
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
+     var albumCover = document.getElementsByClassName('album-cover-art')[0];
+     albumCover.addEventListener("click", changeAlbum);
  };
