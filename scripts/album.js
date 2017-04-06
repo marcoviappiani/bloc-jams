@@ -75,12 +75,12 @@ var findParentByClassName = function(element, targetClassName) {
             console.log("No parent found");
             return null;
         }
-        while(currentParent.className != targetClassName && currentParent.className !== null) {
+        while(currentParent && currentParent.className != targetClassName && currentParent.className !== null) {
             currentParent = currentParent.parentElement;
         }
         
         // Checks that the parent found does indeed match the target Class Name
-        if(currentParent.className !== targetClassName) {
+        if(!currentParent) {
             console.log("No parent found with that class name");
             return null;
         }
