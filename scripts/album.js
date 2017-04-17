@@ -104,7 +104,7 @@ var setSong = function(songNumber) {
         currentlyPlayingSongNumber = null;
         currentSongFromAlbum = null;
     } else {
-        currentlyPlayingSongNumber = songNumber;
+        currentlyPlayingSongNumber = parseInt(songNumber);
         currentSongFromAlbum = currentAlbum.songs[songNumber - 1];    
     }
 };
