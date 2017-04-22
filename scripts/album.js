@@ -5,7 +5,7 @@
         '<tr class="album-view-song-item">'
       + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
       + '  <td class="song-item-title">' + songName + '</td>'
-      + '  <td class="song-item-duration">' + songLength + '</td>'
+      + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
       + '</tr>'
       ;
  
@@ -104,14 +104,38 @@
      if (currentSoundFile) {
          // #10
          currentSoundFile.bind('timeupdate', function(event) {
+             
+             var currentTime = this.getTime();
+             var totalTime = this.getDuration();
              // #11
-             var seekBarFillRatio = this.getTime() / this.getDuration();
+             var seekBarFillRatio = currentTime / totalTime;
              var $seekBar = $('.seek-control .seek-bar');
  
              updateSeekPercentage($seekBar, seekBarFillRatio);
+             setCurrentTimeInPlayerBar(filterTimeCode(currentTime));
          });
      }
  };
+
+var setCurrentTimeInPlayerBar = function (currentTime) {
+    $('.current-time').text(currentTime);
+};
+
+var setTotalTimeInPlayerBar = function (totalTime) {
+    $('.total-time').text(totalTime);
+};
+
+var filterTimeCode = function(timeInSeconds){
+    var min;
+    var sec;
+    timeInSeconds = parseFloat(timeInSeconds);
+    min = Math.floor(timeInSeconds / 60);
+    sec = Math.floor(timeInSeconds % 60);
+    if(sec<10) {sec = "0"+sec;}
+    else if(sec == 0) {sec = "00";};
+    //console.log(min,sec);
+    return min+":"+sec;
+};
 
  var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
     var offsetXPercent = seekBarFillRatio * 100;
@@ -183,7 +207,13 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .artist-name').text(currentAlbum.artist);
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
     $('.main-controls .play-pause').html(playerBarPauseButton);
-
+    
+    var totalTime;
+    
+    currentSoundFile.bind("timeupdate", function(e) {
+        totalTime = currentSoundFile.getDuration();
+        setTotalTimeInPlayerBar(filterTimeCode(totalTime));    
+    });  
 };
 
 var setSong = function(songNumber) {
