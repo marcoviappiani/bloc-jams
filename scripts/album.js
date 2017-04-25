@@ -40,12 +40,12 @@
          } else if (currentlyPlayingSongNumber === songNumber) {
              if (currentSoundFile.isPaused()) {
                 $(this).html(pauseButtonTemplate);
-                $('.main-controls .play-pause').html(playerBarPauseButton);
+                $playPauseButton.html(playerBarPauseButton);
                 currentSoundFile.play();
                  updateSeekBarWhileSongPlays();
             } else {
                 $(this).html(playButtonTemplate);
-                $('.main-controls .play-pause').html(playerBarPlayButton);
+                $playPauseButton.html(playerBarPlayButton);
                 currentSoundFile.pause();   
             }
          }
@@ -206,7 +206,6 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .song-name').text(currentSongFromAlbum.title);
     $('.currently-playing .artist-name').text(currentAlbum.artist);
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
-    $('.main-controls .play-pause').html(playerBarPauseButton);
     
     var totalTime;
     
@@ -214,6 +213,8 @@ var updatePlayerBarSong = function() {
         totalTime = currentSoundFile.getDuration();
         setTotalTimeInPlayerBar(filterTimeCode(totalTime));    
     });  
+    $playPauseButton.html(playerBarPauseButton);
+
 };
 
 var setSong = function(songNumber) {
@@ -301,13 +302,34 @@ var previousSong = function() {
     // Update the Player Bar information
     updatePlayerBarSong();
 
-    $('.main-controls .play-pause').html(playerBarPauseButton);
+    $playPauseButton.html(playerBarPauseButton);
 
     var $previousSongNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
     var $lastSongNumberCell = getSongNumberCell(lastSongNumber);
 
     $previousSongNumberCell.html(pauseButtonTemplate);
     $lastSongNumberCell.html(lastSongNumber);
+};
+
+var togglePlayFromPlayerBar = function() {
+    var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
+    
+    if(!currentlyPlayingSongNumber) {
+        console.log("no song is selected");
+        
+    } else if (currentSoundFile.isPaused()) {
+        //Pause --> play
+        currentlyPlayingCell.html(pauseButtonTemplate);
+        $playPauseButton.html(playerBarPauseButton);
+        currentSoundFile.play();  
+        
+    } else {
+        //Play --> Pause
+        currentlyPlayingCell.html(playButtonTemplate);
+        $playPauseButton.html(playerBarPlayButton);
+        currentSoundFile.pause();     
+    }
+    
 };
 
  // Album button templates
@@ -327,9 +349,14 @@ var previousSong = function() {
  var $previousButton = $('.main-controls .previous');
  var $nextButton = $('.main-controls .next');
 
+ // Player bar Play button
+ var $playPauseButton = $('.main-controls .play-pause');
+    
+
 $(document).ready(function(){
      setCurrentAlbum(albumPicasso);
      $previousButton.click(previousSong);
      $nextButton.click(nextSong);
      setupSeekBars();
+     $playPauseButton.click(togglePlayFromPlayerBar);
  });
